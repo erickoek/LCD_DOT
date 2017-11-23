@@ -9,9 +9,6 @@ static uint8_t batteryPercent;
 static AppSync sync;
 static uint8_t sync_buffer[128];
 
-static Layer *s_date_layer;
-static TextLayer *s_label, *s_num_label;
-
 
 #define SETTINGS_KEY 99
 
@@ -124,6 +121,24 @@ const int DATENUM_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_DATENUM_8,
   RESOURCE_ID_IMAGE_DATENUM_9
 };
+
+#define TOTAL_STEPS_DIGITS 5 
+static GBitmap *steps_digits_images[TOTAL_STEPS_DIGITS];
+static BitmapLayer *steps_digits_layers[TOTAL_STEPS_DIGITS];
+
+const int STEPS_IMAGE_RESOURCE_IDS[] = {
+  RESOURCE_ID_IMAGE_DATENUM_0,
+  RESOURCE_ID_IMAGE_DATENUM_1,
+  RESOURCE_ID_IMAGE_DATENUM_2,
+  RESOURCE_ID_IMAGE_DATENUM_3,
+  RESOURCE_ID_IMAGE_DATENUM_4,
+  RESOURCE_ID_IMAGE_DATENUM_5,
+  RESOURCE_ID_IMAGE_DATENUM_6,
+  RESOURCE_ID_IMAGE_DATENUM_7,
+  RESOURCE_ID_IMAGE_DATENUM_8,
+  RESOURCE_ID_IMAGE_DATENUM_9
+};
+
 
 #define TOTAL_TIME_DIGITS 4
 static GBitmap *time_digits_images[TOTAL_TIME_DIGITS];
@@ -394,10 +409,19 @@ unsigned short get_display_hour(unsigned short hour) {
 }
 
 static void update_days(struct tm *tick_time) {
-  set_container_image(&day_name_image, day_name_layer, DAY_NAME_IMAGE_RESOURCE_IDS[tick_time->tm_wday], GPoint(55, 22));
+  set_container_image(&day_name_image, day_name_layer, DAY_NAME_IMAGE_RESOURCE_IDS[tick_time->tm_wday], GPoint(57, 22));
 
   set_container_image(&date_digits_images[0], date_digits_layers[0], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday/10], GPoint(108, 22));
   set_container_image(&date_digits_images[1], date_digits_layers[1], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday%10], GPoint(125, 22));
+}
+
+static void update_steps(int steps) {
+ 
+  set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[(steps/10000)%10], GPoint(57, 49));
+  set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[(steps/1000)%10], GPoint(74, 49));
+  set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(91, 49));
+  set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(108, 49));
+  set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(125, 49));
 }
 
 static void update_hours(struct tm *tick_time) {
@@ -493,11 +517,11 @@ static void update_seconds(struct tm *tick_time) {
 }
 
 static void health_handler(HealthEventType event, void *context) {
-  static char s_value_buffer[8];
   if (event == HealthEventMovementUpdate) {
     // display the step count
-    snprintf(s_value_buffer, sizeof(s_value_buffer), "%d", (int)health_service_sum_today(HealthMetricStepCount));
-    text_layer_set_text(s_num_label, s_value_buffer);
+    int steps = 12345;
+    //int steps = (int)health_service_sum_today(HealthMetricStepCount);
+    update_steps(steps);
   }
 }
 
@@ -535,6 +559,8 @@ static void init(void) {
 
   memset(&date_digits_layers, 0, sizeof(date_digits_layers));
   memset(&date_digits_images, 0, sizeof(date_digits_images));
+  memset(&steps_digits_layers, 0, sizeof(steps_digits_layers));
+  memset(&steps_digits_images, 0, sizeof(steps_digits_images));
   memset(&battery_percent_layers, 0, sizeof(battery_percent_layers));
   memset(&battery_percent_image, 0, sizeof(battery_percent_image));
 
@@ -592,30 +618,7 @@ static void init(void) {
   //bitmap_layer_set_bitmap(meter_bar_layer, meter_bar_image);
   //layer_add_child(window_layer, bitmap_layer_get_layer(meter_bar_layer));  
 
-  GRect framesteps = (GRect) {
-    .origin = { .x = 10, .y = 20 },
-    .size = {.w = 50, .h = 15}
-  };
-  s_date_layer = layer_create(framesteps);
-layer_add_child(window_layer, s_date_layer);
-  
-  s_label = text_layer_create(PBL_IF_ROUND_ELSE(
-    GRect(10, 20, 60, 35),
-    GRect(10, 20, 60, 35)));
-  text_layer_set_text(s_label, "steps");
-  text_layer_set_background_color(s_label, GColorBlack);
-  text_layer_set_text_color(s_label, GColorWhite);
-  text_layer_set_font(s_label, fonts_get_system_font(FONT_KEY_GOTHIC_18));
-  layer_add_child(s_date_layer, text_layer_get_layer(s_label));
-
-  s_num_label = text_layer_create(PBL_IF_ROUND_ELSE(
-    GRect(90, 114, 58, 20),
-    GRect(73, 114, 58, 20)));
-  text_layer_set_background_color(s_num_label, GColorBlack);
-  text_layer_set_text_color(s_num_label, GColorWhite);
-  text_layer_set_font(s_num_label, fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD));
-layer_add_child(s_date_layer, text_layer_get_layer(s_num_label));
-  
+ 
   bluetooth_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_BLUETOOTH);
   GRect frame3 = (GRect) {
     .origin = { .x = 17, .y = 5 },
@@ -670,6 +673,10 @@ layer_add_child(s_date_layer, text_layer_get_layer(s_num_label));
   for (int i = 0; i < TOTAL_DATE_DIGITS; ++i) {
     date_digits_layers[i] = bitmap_layer_create(dummy_frame);
     layer_add_child(window_layer, bitmap_layer_get_layer(date_digits_layers[i]));
+  }
+  for (int i = 0; i < TOTAL_STEPS_DIGITS; ++i) {
+    steps_digits_layers[i] = bitmap_layer_create(dummy_frame);
+    layer_add_child(window_layer, bitmap_layer_get_layer(steps_digits_layers[i]));
   }
   for (int i = 0; i < TOTAL_BATTERY_PERCENT_DIGITS; ++i) {
     battery_percent_layers[i] = bitmap_layer_create(dummy_frame);
@@ -733,6 +740,14 @@ layer_add_child(s_date_layer, text_layer_get_layer(s_num_label));
 
   bluetooth_connection_service_subscribe(bluetooth_connection_callback);
   battery_state_service_subscribe(&update_battery);
+  
+  if(health_service_events_subscribe(health_handler, NULL)) {
+    // force initial steps display
+    health_handler(HealthEventMovementUpdate, NULL);
+  } else {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "Health not available!");
+  }
+
 
 }
 
@@ -746,6 +761,7 @@ static void deinit(void) {
   tick_timer_service_unsubscribe();
   bluetooth_connection_service_unsubscribe();
   battery_state_service_unsubscribe();
+  health_service_events_unsubscribe();
 
   animation_unschedule_all();
 
@@ -809,6 +825,14 @@ static void deinit(void) {
     date_digits_images[i] = NULL;
     bitmap_layer_destroy(date_digits_layers[i]);
     date_digits_layers[i] = NULL;
+  }
+  
+   for (int i = 0; i < TOTAL_STEPS_DIGITS; i++) {
+    layer_remove_from_parent(bitmap_layer_get_layer(steps_digits_layers[i]));
+    gbitmap_destroy(steps_digits_images[i]);
+    steps_digits_images[i] = NULL;
+    bitmap_layer_destroy(steps_digits_layers[i]);
+    steps_digits_layers[i] = NULL;
   }
 
   for (int i = 0; i < TOTAL_TIME_DIGITS; i++) {
