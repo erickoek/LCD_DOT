@@ -416,11 +416,18 @@ static void update_days(struct tm *tick_time) {
 }
 
 static void update_steps(int steps) {
- 
-  set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[(steps/10000)%10], GPoint(57, 49));
-  set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[(steps/1000)%10], GPoint(74, 49));
-  set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(91, 49));
-  set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(108, 49));
+  if(((steps/10000)%10) != 0){
+    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[(steps/10000)%10], GPoint(57, 49));
+  }
+  if(((steps/1000)%10) != 0){
+    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[(steps/1000)%10], GPoint(74, 49));
+  }
+  if(((steps/100)%10) != 0){
+    set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(91, 49));
+  }
+  if(((steps/10)%10) != 0){
+    set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(108, 49));
+  }
   set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(125, 49));
 }
 
@@ -519,8 +526,8 @@ static void update_seconds(struct tm *tick_time) {
 static void health_handler(HealthEventType event, void *context) {
   if (event == HealthEventMovementUpdate) {
     // display the step count
-    int steps = 12345;
-    //int steps = (int)health_service_sum_today(HealthMetricStepCount);
+    //int steps = 12345;
+    int steps = ((int)health_service_sum_today(HealthMetricStepCount));
     update_steps(steps);
   }
 }
