@@ -68,6 +68,9 @@ static BitmapLayer *branding_mask_layer;
 static GBitmap *background_image;
 static BitmapLayer *background_layer;
 
+static GBitmap *steps_image;
+static BitmapLayer *steps_layer;
+
 static GBitmap *separator_image;
 static BitmapLayer *separator_layer;
 static PropertyAnimation *separator_animation;
@@ -394,8 +397,8 @@ void bluetooth_connection_callback(bool connected) {
 
 void battery_layer_update_callback(Layer *me, GContext* ctx) {        
   //draw the remaining battery percentage
-  graphics_context_set_stroke_color(ctx, COLOR_FALLBACK(GColorBlue, GColorBlack));
-  graphics_context_set_fill_color(ctx, COLOR_FALLBACK(GColorBlue, GColorBlack));
+  graphics_context_set_stroke_color(ctx, COLOR_FALLBACK(GColorGreen, GColorBlack));
+  graphics_context_set_fill_color(ctx, COLOR_FALLBACK(GColorGreen, GColorBlack));
   graphics_fill_rect(ctx, GRect(2, 2, ((batteryPercent/100.0)*11.0), 5), 0, GCornerNone);
   }
 
@@ -416,18 +419,18 @@ static void update_days(struct tm *tick_time) {
 }
 
 static void update_steps(int steps) {
-  if(((steps/10000)%10) != 0){
+  //if( ((steps/10000)%10) != 0 ){
     set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[(steps/10000)%10], GPoint(57, 49));
-  }
-  if(((steps/1000)%10) != 0){
+  //}
+  //if( ((steps/1000)%10) == 0 && ((steps/10000)%10) != 0 ){
     set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[(steps/1000)%10], GPoint(74, 49));
-  }
-  if(((steps/100)%10) != 0){
+  //}
+  //if( ((steps/100)%10) == 0 && (((steps/1000)%10) != 0 || ((steps/10000)%10) != 0) ){
     set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(91, 49));
-  }
-  if(((steps/10)%10) != 0){
+  //}
+  //if(((steps/10)%10) == 0 && (((steps/100)%10) != 0 || ((steps/1000)%10) != 0 || ((steps/10000)%10) != 0) ){
     set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(108, 49));
-  }
+  //}
   set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(125, 49));
 }
 
@@ -526,7 +529,7 @@ static void update_seconds(struct tm *tick_time) {
 static void health_handler(HealthEventType event, void *context) {
   if (event == HealthEventMovementUpdate) {
     // display the step count
-    //int steps = 12345;
+    //int steps = 105;
     int steps = ((int)health_service_sum_today(HealthMetricStepCount));
     update_steps(steps);
   }
@@ -596,12 +599,22 @@ static void init(void) {
   med_time_layer = layer_create(layer_get_frame(window_layer));
   layer_add_child(window_layer, med_time_layer);
   
-  separator_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_SEPARATOR);
+  steps_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_STEPS);
   GRect frame = (GRect) {
+    .origin = { .x = 33, .y = 49},
+    .size = gbitmap_get_bounds(steps_image).size
+  };
+  steps_layer = bitmap_layer_create(frame);
+
+  bitmap_layer_set_bitmap(steps_layer, steps_image);
+  layer_add_child(window_layer, bitmap_layer_get_layer(steps_layer));  
+  
+  separator_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_SEPARATOR);
+  GRect frame_steps = (GRect) {
     .origin = { .x = 58, .y = 105},
     .size = gbitmap_get_bounds(separator_image).size
   };
-  separator_layer = bitmap_layer_create(frame);
+  separator_layer = bitmap_layer_create(frame_steps);
 
   bitmap_layer_set_bitmap(separator_layer, separator_image);
   layer_add_child(big_time_layer, bitmap_layer_get_layer(separator_layer));   
@@ -788,6 +801,11 @@ static void deinit(void) {
   gbitmap_destroy(branding_mask_image);
   branding_mask_image = NULL;
 
+  layer_remove_from_parent(bitmap_layer_get_layer(steps_layer));
+  bitmap_layer_destroy(steps_layer);
+  gbitmap_destroy(steps_image);
+  steps_image = NULL;
+  
   layer_remove_from_parent(bitmap_layer_get_layer(separator_layer));
   bitmap_layer_destroy(separator_layer);
   gbitmap_destroy(separator_image);

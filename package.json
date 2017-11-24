@@ -23,6 +23,18 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/tiny_4.png",
+                    "name": "IMAGE_TINY_4",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/steps.png",
+                    "name": "IMAGE_STEPS",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
                     "file": "images/menu_icon.png",
                     "menuIcon": true,
                     "name": "IMAGE_MENU_ICON",
@@ -35,66 +47,73 @@
                 {
                     "file": "images/tiny_percent.png",
                     "name": "IMAGE_TINY_PERCENT",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
                     "file": "images/tiny_9.png",
                     "name": "IMAGE_TINY_9",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
                     "file": "images/tiny_8.png",
                     "name": "IMAGE_TINY_8",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
                     "file": "images/tiny_7.png",
                     "name": "IMAGE_TINY_7",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
                     "file": "images/tiny_6.png",
                     "name": "IMAGE_TINY_6",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
                     "file": "images/tiny_5.png",
                     "name": "IMAGE_TINY_5",
-                    "type": "png"
-                },
-                {
-                    "file": "images/tiny_4.png",
-                    "name": "IMAGE_TINY_4",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
                     "file": "images/tiny_3.png",
                     "name": "IMAGE_TINY_3",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
                     "file": "images/tiny_2.png",
                     "name": "IMAGE_TINY_2",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
                     "file": "images/tiny_1.png",
                     "name": "IMAGE_TINY_1",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
                     "file": "images/tiny_0.png",
                     "name": "IMAGE_TINY_0",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
                     "file": "images/time_format_PM.png",
                     "name": "IMAGE_PM_MODE",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
                     "file": "images/time_format_24H.png",
                     "name": "IMAGE_24_HOUR_MODE",
+                    "targetPlatforms": null,
                     "type": "png"
                 },
                 {
