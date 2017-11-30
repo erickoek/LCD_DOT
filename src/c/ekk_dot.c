@@ -444,12 +444,12 @@ static void update_hours(struct tm *tick_time) {
   unsigned short display_hour = get_display_hour(tick_time->tm_hour);
 
 	if(settings.Seconds) {
-		set_container_image(&time_med_digits_images[0], time_med_digits_layers[0], MED_DIGIT_IMAGE_RESOURCE_IDS[display_hour/10], GPoint(12, 88));
-		set_container_image(&time_med_digits_images[1], time_med_digits_layers[1], MED_DIGIT_IMAGE_RESOURCE_IDS[display_hour%10], GPoint(35, 88));  
+		set_container_image(&time_med_digits_images[0], time_med_digits_layers[0], MED_DIGIT_IMAGE_RESOURCE_IDS[display_hour/10], GPoint(12, 94));
+		set_container_image(&time_med_digits_images[1], time_med_digits_layers[1], MED_DIGIT_IMAGE_RESOURCE_IDS[display_hour%10], GPoint(35, 94));  
 	}
 	else {
-		set_container_image(&time_digits_images[0], time_digits_layers[0], BIG_DIGIT_IMAGE_RESOURCE_IDS[display_hour/10], GPoint(2, 105));
-		set_container_image(&time_digits_images[1], time_digits_layers[1], BIG_DIGIT_IMAGE_RESOURCE_IDS[display_hour%10], GPoint(30, 105));
+		set_container_image(&time_digits_images[0], time_digits_layers[0], BIG_DIGIT_IMAGE_RESOURCE_IDS[display_hour/10], GPoint(2, 115));
+		set_container_image(&time_digits_images[1], time_digits_layers[1], BIG_DIGIT_IMAGE_RESOURCE_IDS[display_hour%10], GPoint(30, 115));
 	}
     
   if (!clock_is_24h_style()) {
@@ -485,8 +485,8 @@ static void update_minutes(struct tm *tick_time) {
 		set_container_image(&time_med_digits_images[3], time_med_digits_layers[3], MED_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min%10], GPoint(87, 88));
 	}
 	else {
-		set_container_image(&time_digits_images[2], time_digits_layers[2], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min/10], GPoint(86, 105));
-		set_container_image(&time_digits_images[3], time_digits_layers[3], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min%10], GPoint(114, 105));
+		set_container_image(&time_digits_images[2], time_digits_layers[2], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min/10], GPoint(86, 115));
+		set_container_image(&time_digits_images[3], time_digits_layers[3], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min%10], GPoint(114, 115));
 	}
 
 }
@@ -611,7 +611,7 @@ static void init(void) {
   
   separator_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_SEPARATOR);
   GRect frame_steps = (GRect) {
-    .origin = { .x = 58, .y = 105},
+    .origin = { .x = 58, .y = 115},
     .size = gbitmap_get_bounds(separator_image).size
   };
   separator_layer = bitmap_layer_create(frame_steps);
