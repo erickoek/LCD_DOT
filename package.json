@@ -2,26 +2,95 @@
     "author": "Eric",
     "dependencies": {},
     "keywords": [],
-    "name": "lcd_ekk",
+    "name": "lcd_dot",
     "pebble": {
         "capabilities": [
             "configurable",
             "health"
         ],
-        "displayName": "LCD_EKK",
+        "displayName": "LCD_DOT",
         "enableMultiJS": false,
         "messageKeys": {
-            "battery_hide": 5,
             "blink": 0,
             "bluetoothvibe": 2,
-            "branding_mask": 4,
             "hourlyvibe": 3,
-            "invert": 1,
-            "seconds": 6
+            "invert": 1
         },
         "projectType": "native",
         "resources": {
             "media": [
+                {
+                    "file": "images/mon_dec.png",
+                    "name": "IMAGE_MON_NAME_DEC",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_nov.png",
+                    "name": "IMAGE_MON_NAME_NOV",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_okt.png",
+                    "name": "IMAGE_MON_NAME_OKT",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_sep.png",
+                    "name": "IMAGE_MON_NAME_SEP",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_aug.png",
+                    "name": "IMAGE_MON_NAME_AUG",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_jul.png",
+                    "name": "IMAGE_MON_NAME_JUL",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_jun.png",
+                    "name": "IMAGE_MON_NAME_JUN",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_mei.png",
+                    "name": "IMAGE_MON_NAME_MAY",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_apr.png",
+                    "name": "IMAGE_MON_NAME_APR",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_mar.png",
+                    "name": "IMAGE_MON_NAME_MAR",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_feb.png",
+                    "name": "IMAGE_MON_NAME_FEB",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_jan.png",
+                    "name": "IMAGE_MON_NAME_JAN",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
                 {
                     "file": "images/tiny_4.png",
                     "name": "IMAGE_TINY_4",
@@ -447,5 +516,5 @@
             "watchface": true
         }
     },
-    "version": "0.6.0"
+    "version": "0.65.0"
 }
