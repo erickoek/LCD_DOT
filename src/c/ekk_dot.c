@@ -95,6 +95,9 @@ static BitmapLayer *time_format_layer;
 static GBitmap *day_name_image;
 static BitmapLayer *day_name_layer;
 
+static GBitmap *month_name_image;
+static BitmapLayer *month_name_layer;
+
 static Layer *big_time_layer;
 static Layer *med_time_layer;
 
@@ -106,6 +109,21 @@ const int DAY_NAME_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_DAY_NAME_THU,
   RESOURCE_ID_IMAGE_DAY_NAME_FRI,
   RESOURCE_ID_IMAGE_DAY_NAME_SAT
+};
+
+const int MONTH_NAME_IMAGE_RESOURCE_IDS[] = {
+  RESOURCE_ID_IMAGE_MON_NAME_JAN,
+  RESOURCE_ID_IMAGE_MON_NAME_FEB,
+  RESOURCE_ID_IMAGE_MON_NAME_MAR,
+  RESOURCE_ID_IMAGE_MON_NAME_APR,
+  RESOURCE_ID_IMAGE_MON_NAME_MAY,
+  RESOURCE_ID_IMAGE_MON_NAME_JUN,
+  RESOURCE_ID_IMAGE_MON_NAME_JUL,
+  RESOURCE_ID_IMAGE_MON_NAME_AUG,
+  RESOURCE_ID_IMAGE_MON_NAME_SEP,
+  RESOURCE_ID_IMAGE_MON_NAME_OKT,
+  RESOURCE_ID_IMAGE_MON_NAME_NOV,
+  RESOURCE_ID_IMAGE_MON_NAME_DEC
 };
 
 #define TOTAL_DATE_DIGITS 2 
@@ -412,26 +430,27 @@ unsigned short get_display_hour(unsigned short hour) {
 }
 
 static void update_days(struct tm *tick_time) {
-  set_container_image(&day_name_image, day_name_layer, DAY_NAME_IMAGE_RESOURCE_IDS[tick_time->tm_wday], GPoint(57, 22));
-
-  set_container_image(&date_digits_images[0], date_digits_layers[0], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday/10], GPoint(108, 22));
-  set_container_image(&date_digits_images[1], date_digits_layers[1], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday%10], GPoint(125, 22));
+  set_container_image(&day_name_image, day_name_layer, DAY_NAME_IMAGE_RESOURCE_IDS[tick_time->tm_wday], GPoint(5, 77));
+  set_container_image(&month_name_image, month_name_layer, MONTH_NAME_IMAGE_RESOURCE_IDS[tick_time->tm_mon], GPoint(93, 77));
+  
+  set_container_image(&date_digits_images[0], date_digits_layers[0], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday/10], GPoint(59, 77));
+  set_container_image(&date_digits_images[1], date_digits_layers[1], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday%10], GPoint(76, 77));
 }
 
 static void update_steps(int steps) {
   //if( ((steps/10000)%10) != 0 ){
-    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[(steps/10000)%10], GPoint(57, 49));
+    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[(steps/10000)%10], GPoint(58, 49));
   //}
   //if( ((steps/1000)%10) == 0 && ((steps/10000)%10) != 0 ){
-    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[(steps/1000)%10], GPoint(74, 49));
+    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[(steps/1000)%10], GPoint(75, 49));
   //}
   //if( ((steps/100)%10) == 0 && (((steps/1000)%10) != 0 || ((steps/10000)%10) != 0) ){
-    set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(91, 49));
+    set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(92, 49));
   //}
   //if(((steps/10)%10) == 0 && (((steps/100)%10) != 0 || ((steps/1000)%10) != 0 || ((steps/10000)%10) != 0) ){
-    set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(108, 49));
+    set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(109, 49));
   //}
-  set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(125, 49));
+  set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 49));
 }
 
 static void update_hours(struct tm *tick_time) {
@@ -599,10 +618,10 @@ static void init(void) {
   med_time_layer = layer_create(layer_get_frame(window_layer));
   layer_add_child(window_layer, med_time_layer);
   
-  steps_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_STEPS);
+  steps_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_TESTWEER);
   GRect frame = (GRect) {
-    .origin = { .x = 33, .y = 49},
-    .size = gbitmap_get_bounds(steps_image).size
+   .origin = { .x = 3, .y = 20},
+   .size = gbitmap_get_bounds(steps_image).size
   };
   steps_layer = bitmap_layer_create(frame);
 
@@ -677,6 +696,10 @@ static void init(void) {
   GRect dummy_frame = { {0, 0}, {0, 0} };
   day_name_layer = bitmap_layer_create(dummy_frame);
   layer_add_child(window_layer, bitmap_layer_get_layer(day_name_layer));
+  
+  //GRect dummy_frame = { {0, 0}, {0, 0} };
+  month_name_layer = bitmap_layer_create(dummy_frame);
+  layer_add_child(window_layer, bitmap_layer_get_layer(month_name_layer));
   
   for (int i = 0; i < TOTAL_TIME_DIGITS; ++i) {
     time_digits_layers[i] = bitmap_layer_create(dummy_frame);
@@ -843,6 +866,11 @@ static void deinit(void) {
   bitmap_layer_destroy(day_name_layer);
   gbitmap_destroy(day_name_image);
   day_name_image = NULL;
+  
+  layer_remove_from_parent(bitmap_layer_get_layer(month_name_layer));
+  bitmap_layer_destroy(month_name_layer);
+  gbitmap_destroy(month_name_image);
+  month_name_image = NULL;
   
   for (int i = 0; i < TOTAL_DATE_DIGITS; i++) {
     layer_remove_from_parent(bitmap_layer_get_layer(date_digits_layers[i]));

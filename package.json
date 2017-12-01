@@ -20,6 +20,12 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/testweer.png",
+                    "name": "IMAGE_TESTWEER",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
                     "file": "images/mon_dec.png",
                     "name": "IMAGE_MON_NAME_DEC",
                     "targetPlatforms": null,
@@ -516,5 +522,5 @@
             "watchface": true
         }
     },
-    "version": "0.66.0"
+    "version": "0.7.0"
 }
