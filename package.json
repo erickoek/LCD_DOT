@@ -20,6 +20,24 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/datenum_dot.png",
+                    "name": "IMAGE_DATENUM_DOT",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/datenum_t.png",
+                    "name": "IMAGE_DATENUM_T",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/datenum_S.png",
+                    "name": "IMAGE_DATENUM_S",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
                     "file": "images/testweer.png",
                     "name": "IMAGE_TESTWEER",
                     "targetPlatforms": null,
@@ -522,5 +540,5 @@
             "watchface": true
         }
     },
-    "version": "0.7.0"
+    "version": "0.71.0"
 }

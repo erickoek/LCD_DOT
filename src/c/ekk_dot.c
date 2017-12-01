@@ -68,8 +68,8 @@ static BitmapLayer *branding_mask_layer;
 static GBitmap *background_image;
 static BitmapLayer *background_layer;
 
-static GBitmap *steps_image;
-static BitmapLayer *steps_layer;
+//static GBitmap *steps_image;
+//static BitmapLayer *steps_layer;
 
 static GBitmap *separator_image;
 static BitmapLayer *separator_layer;
@@ -147,7 +147,7 @@ const int DATENUM_IMAGE_RESOURCE_IDS[] = {
 static GBitmap *steps_digits_images[TOTAL_STEPS_DIGITS];
 static BitmapLayer *steps_digits_layers[TOTAL_STEPS_DIGITS];
 
-const int STEPS_IMAGE_RESOURCE_IDS[] = {
+const char STEPS_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_DATENUM_0,
   RESOURCE_ID_IMAGE_DATENUM_1,
   RESOURCE_ID_IMAGE_DATENUM_2,
@@ -157,7 +157,10 @@ const int STEPS_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_DATENUM_6,
   RESOURCE_ID_IMAGE_DATENUM_7,
   RESOURCE_ID_IMAGE_DATENUM_8,
-  RESOURCE_ID_IMAGE_DATENUM_9
+  RESOURCE_ID_IMAGE_DATENUM_9,
+  RESOURCE_ID_IMAGE_DATENUM_S,
+  RESOURCE_ID_IMAGE_DATENUM_T,
+  RESOURCE_ID_IMAGE_DATENUM_DOT
 };
 
 
@@ -438,20 +441,43 @@ static void update_days(struct tm *tick_time) {
 }
 
 static void update_steps(int steps) {
-  //if( ((steps/10000)%10) != 0 ){
+  if( ((steps/10000)%10) != 0 ){
     set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[(steps/10000)%10], GPoint(58, 48));
-  //}
-  //if( ((steps/1000)%10) == 0 && ((steps/10000)%10) != 0 ){
     set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[(steps/1000)%10], GPoint(75, 48));
-  //}
-  //if( ((steps/100)%10) == 0 && (((steps/1000)%10) != 0 || ((steps/10000)%10) != 0) ){
     set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(92, 48));
-  //}
-  //if(((steps/10)%10) == 0 && (((steps/100)%10) != 0 || ((steps/1000)%10) != 0 || ((steps/10000)%10) != 0) ){
     set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(109, 48));
-  //}
-  set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));
+    set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));  
+    
+  }
+  if( ((steps/10000)%10) == 0 && ((steps/1000)%10) != 0 ){
+    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(58, 48));
+    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[(steps/1000)%10], GPoint(75, 48));
+    set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(92, 48));
+    set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(109, 48));
+    set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));  
+    }
+  if( ((steps/10000)%10) == 0 && ((steps/1000)%10) == 0 && ((steps/100)%10) != 0 ){
+    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(58, 48));
+    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[11], GPoint(75, 48));
+    set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(92, 48));
+    set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(109, 48));
+    set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));  
+    }
+  if( ((steps/10000)%10) == 0 && ((steps/1000)%10) == 0 && ((steps/100)%10) == 0 && ((steps/10)%10) != 0 ){
+    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(58, 48));
+    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[11], GPoint(75, 48));
+    set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[12], GPoint(92, 48));
+    set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(109, 48));
+    set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));  
+  }
+  if( ((steps/10000)%10) == 0 && ((steps/1000)%10) == 0 && ((steps/100)%10) == 0 && ((steps/10)%10) == 0 ){
+    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(58, 48));
+    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[11], GPoint(75, 48));
+    set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[12], GPoint(92, 48));
+    set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));
+  }
 }
+   
 
 static void update_hours(struct tm *tick_time) {
 
@@ -548,7 +574,7 @@ static void update_seconds(struct tm *tick_time) {
 static void health_handler(HealthEventType event, void *context) {
   if (event == HealthEventMovementUpdate) {
     // display the step count
-    //int steps = 105;
+    //int steps = 5;
     int steps = ((int)health_service_sum_today(HealthMetricStepCount));
     update_steps(steps);
   }
