@@ -430,27 +430,27 @@ unsigned short get_display_hour(unsigned short hour) {
 }
 
 static void update_days(struct tm *tick_time) {
-  set_container_image(&day_name_image, day_name_layer, DAY_NAME_IMAGE_RESOURCE_IDS[tick_time->tm_wday], GPoint(5, 77));
-  set_container_image(&month_name_image, month_name_layer, MONTH_NAME_IMAGE_RESOURCE_IDS[tick_time->tm_mon], GPoint(93, 77));
+  set_container_image(&day_name_image, day_name_layer, DAY_NAME_IMAGE_RESOURCE_IDS[tick_time->tm_wday], GPoint(5, 78));
+  set_container_image(&month_name_image, month_name_layer, MONTH_NAME_IMAGE_RESOURCE_IDS[tick_time->tm_mon], GPoint(93, 78));
   
-  set_container_image(&date_digits_images[0], date_digits_layers[0], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday/10], GPoint(59, 77));
-  set_container_image(&date_digits_images[1], date_digits_layers[1], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday%10], GPoint(76, 77));
+  set_container_image(&date_digits_images[0], date_digits_layers[0], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday/10], GPoint(59, 78));
+  set_container_image(&date_digits_images[1], date_digits_layers[1], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday%10], GPoint(76, 78));
 }
 
 static void update_steps(int steps) {
   //if( ((steps/10000)%10) != 0 ){
-    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[(steps/10000)%10], GPoint(58, 49));
+    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[(steps/10000)%10], GPoint(58, 48));
   //}
   //if( ((steps/1000)%10) == 0 && ((steps/10000)%10) != 0 ){
-    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[(steps/1000)%10], GPoint(75, 49));
+    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[(steps/1000)%10], GPoint(75, 48));
   //}
   //if( ((steps/100)%10) == 0 && (((steps/1000)%10) != 0 || ((steps/10000)%10) != 0) ){
-    set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(92, 49));
+    set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(92, 48));
   //}
   //if(((steps/10)%10) == 0 && (((steps/100)%10) != 0 || ((steps/1000)%10) != 0 || ((steps/10000)%10) != 0) ){
-    set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(109, 49));
+    set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(109, 48));
   //}
-  set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 49));
+  set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));
 }
 
 static void update_hours(struct tm *tick_time) {
@@ -467,8 +467,8 @@ static void update_hours(struct tm *tick_time) {
 		set_container_image(&time_med_digits_images[1], time_med_digits_layers[1], MED_DIGIT_IMAGE_RESOURCE_IDS[display_hour%10], GPoint(35, 94));  
 	}
 	else {
-		set_container_image(&time_digits_images[0], time_digits_layers[0], BIG_DIGIT_IMAGE_RESOURCE_IDS[display_hour/10], GPoint(2, 117));
-		set_container_image(&time_digits_images[1], time_digits_layers[1], BIG_DIGIT_IMAGE_RESOURCE_IDS[display_hour%10], GPoint(30, 117));
+		set_container_image(&time_digits_images[0], time_digits_layers[0], BIG_DIGIT_IMAGE_RESOURCE_IDS[display_hour/10], GPoint(3, 117));
+		set_container_image(&time_digits_images[1], time_digits_layers[1], BIG_DIGIT_IMAGE_RESOURCE_IDS[display_hour%10], GPoint(31, 117));
 	}
     
   if (!clock_is_24h_style()) {
@@ -504,8 +504,8 @@ static void update_minutes(struct tm *tick_time) {
 		set_container_image(&time_med_digits_images[3], time_med_digits_layers[3], MED_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min%10], GPoint(87, 88));
 	}
 	else {
-		set_container_image(&time_digits_images[2], time_digits_layers[2], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min/10], GPoint(86, 117));
-		set_container_image(&time_digits_images[3], time_digits_layers[3], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min%10], GPoint(114, 117));
+		set_container_image(&time_digits_images[2], time_digits_layers[2], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min/10], GPoint(87, 117));
+		set_container_image(&time_digits_images[3], time_digits_layers[3], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min%10], GPoint(115, 117));
 	}
 
 }
@@ -618,23 +618,24 @@ static void init(void) {
   med_time_layer = layer_create(layer_get_frame(window_layer));
   layer_add_child(window_layer, med_time_layer);
   
-  steps_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_TESTWEER);
-  GRect frame = (GRect) {
-   .origin = { .x = 3, .y = 20},
-   .size = gbitmap_get_bounds(steps_image).size
-  };
-  steps_layer = bitmap_layer_create(frame);
+  //steps_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_TESTWEER);
+  //GRect frame = (GRect) {
+  // .origin = { .x = 3, .y = 20},
+  // .size = gbitmap_get_bounds(steps_image).size
+  //};
+  //steps_layer = bitmap_layer_create(frame);
 
-  bitmap_layer_set_bitmap(steps_layer, steps_image);
-  layer_add_child(window_layer, bitmap_layer_get_layer(steps_layer));  
+  //bitmap_layer_set_bitmap(steps_layer, steps_image);
+  //layer_add_child(window_layer, bitmap_layer_get_layer(steps_layer));  
   
   separator_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_SEPARATOR);
   GRect frame_steps = (GRect) {
-    .origin = { .x = 58, .y = 117},
+    .origin = { .x = 59, .y = 117},
     .size = gbitmap_get_bounds(separator_image).size
   };
   separator_layer = bitmap_layer_create(frame_steps);
-
+  
+  
   bitmap_layer_set_bitmap(separator_layer, separator_image);
   layer_add_child(big_time_layer, bitmap_layer_get_layer(separator_layer));   
   
@@ -824,10 +825,10 @@ static void deinit(void) {
   gbitmap_destroy(branding_mask_image);
   branding_mask_image = NULL;
 
-  layer_remove_from_parent(bitmap_layer_get_layer(steps_layer));
-  bitmap_layer_destroy(steps_layer);
-  gbitmap_destroy(steps_image);
-  steps_image = NULL;
+  //layer_remove_from_parent(bitmap_layer_get_layer(steps_layer));
+  //bitmap_layer_destroy(steps_layer);
+  //gbitmap_destroy(steps_image);
+  //steps_image = NULL;
   
   layer_remove_from_parent(bitmap_layer_get_layer(separator_layer));
   bitmap_layer_destroy(separator_layer);
