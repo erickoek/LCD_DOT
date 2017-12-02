@@ -158,9 +158,7 @@ const char STEPS_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_DATENUM_7,
   RESOURCE_ID_IMAGE_DATENUM_8,
   RESOURCE_ID_IMAGE_DATENUM_9,
-  RESOURCE_ID_IMAGE_DATENUM_S,
-  RESOURCE_ID_IMAGE_DATENUM_T,
-  RESOURCE_ID_IMAGE_DATENUM_DOT
+  RESOURCE_ID_IMAGE_STEPS
 };
 
 
@@ -215,6 +213,23 @@ const int SM_DIGIT_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_SM_9
 };
 
+#define TOTAL_WEEK_DIGITS 3
+static GBitmap *week_images[TOTAL_WEEK_DIGITS];
+static BitmapLayer *week_layers[TOTAL_WEEK_DIGITS];
+
+const int WEEK_IMAGE_RESOURCE_IDS[] = {
+  RESOURCE_ID_IMAGE_TINY_0,
+  RESOURCE_ID_IMAGE_TINY_1,
+  RESOURCE_ID_IMAGE_TINY_2,
+  RESOURCE_ID_IMAGE_TINY_3,
+  RESOURCE_ID_IMAGE_TINY_4,
+  RESOURCE_ID_IMAGE_TINY_5,
+  RESOURCE_ID_IMAGE_TINY_6,
+  RESOURCE_ID_IMAGE_TINY_7,
+  RESOURCE_ID_IMAGE_TINY_8,
+  RESOURCE_ID_IMAGE_TINY_9,
+  RESOURCE_ID_IMAGE_TINY_WK
+};
 
 #define TOTAL_BATTERY_PERCENT_DIGITS 3
 static GBitmap *battery_percent_image[TOTAL_BATTERY_PERCENT_DIGITS];
@@ -398,9 +413,9 @@ static void update_battery(BatteryChargeState charge_state) {
   for (int i = 0; i < TOTAL_BATTERY_PERCENT_DIGITS; ++i) {
     layer_set_hidden(bitmap_layer_get_layer(battery_percent_layers[i]), false);
   }  
-  set_container_image(&battery_percent_image[0], battery_percent_layers[0], TINY_IMAGE_RESOURCE_IDS[charge_state.charge_percent/10], GPoint(89, 5));
-  set_container_image(&battery_percent_image[1], battery_percent_layers[1], TINY_IMAGE_RESOURCE_IDS[charge_state.charge_percent%10], GPoint(95, 5));
-  set_container_image(&battery_percent_image[2], battery_percent_layers[2], TINY_IMAGE_RESOURCE_IDS[10], GPoint(101, 5));
+  set_container_image(&battery_percent_image[0], battery_percent_layers[0], TINY_IMAGE_RESOURCE_IDS[charge_state.charge_percent/10], GPoint(99, 5));
+  set_container_image(&battery_percent_image[1], battery_percent_layers[1], TINY_IMAGE_RESOURCE_IDS[charge_state.charge_percent%10], GPoint(105, 5));
+  set_container_image(&battery_percent_image[2], battery_percent_layers[2], TINY_IMAGE_RESOURCE_IDS[10], GPoint(111, 5));
  
 }
 
@@ -438,6 +453,15 @@ static void update_days(struct tm *tick_time) {
   
   set_container_image(&date_digits_images[0], date_digits_layers[0], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday/10], GPoint(59, 78));
   set_container_image(&date_digits_images[1], date_digits_layers[1], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday%10], GPoint(76, 78));
+  
+  static char week_text[] = "00"; 
+  strftime(week_text, sizeof(week_text), "%V", tick_time);
+  int week = atoi(week_text);
+  set_container_image(&week_images[0], week_layers[0], WEEK_IMAGE_RESOURCE_IDS[10], GPoint(56, 5));
+  set_container_image(&week_images[1], week_layers[1], WEEK_IMAGE_RESOURCE_IDS[week/10], GPoint(72, 5));
+  set_container_image(&week_images[2], week_layers[2], WEEK_IMAGE_RESOURCE_IDS[week%10], GPoint(78, 5));
+  
+  
 }
 
 static void update_steps(int steps) {
@@ -450,30 +474,25 @@ static void update_steps(int steps) {
     
   }
   if( ((steps/10000)%10) == 0 && ((steps/1000)%10) != 0 ){
-    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(58, 48));
+    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(54, 47));
     set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[(steps/1000)%10], GPoint(75, 48));
     set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(92, 48));
     set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(109, 48));
     set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));  
     }
   if( ((steps/10000)%10) == 0 && ((steps/1000)%10) == 0 && ((steps/100)%10) != 0 ){
-    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(58, 48));
-    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[11], GPoint(75, 48));
+    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(54, 47));
     set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[(steps/100)%10], GPoint(92, 48));
     set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(109, 48));
     set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));  
     }
   if( ((steps/10000)%10) == 0 && ((steps/1000)%10) == 0 && ((steps/100)%10) == 0 && ((steps/10)%10) != 0 ){
-    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(58, 48));
-    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[11], GPoint(75, 48));
-    set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[12], GPoint(92, 48));
+    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(54, 47));
     set_container_image(&steps_digits_images[3], steps_digits_layers[3], STEPS_IMAGE_RESOURCE_IDS[(steps/10)%10], GPoint(109, 48));
     set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));  
   }
   if( ((steps/10000)%10) == 0 && ((steps/1000)%10) == 0 && ((steps/100)%10) == 0 && ((steps/10)%10) == 0 ){
-    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(58, 48));
-    set_container_image(&steps_digits_images[1], steps_digits_layers[1], STEPS_IMAGE_RESOURCE_IDS[11], GPoint(75, 48));
-    set_container_image(&steps_digits_images[2], steps_digits_layers[2], STEPS_IMAGE_RESOURCE_IDS[12], GPoint(92, 48));
+    set_container_image(&steps_digits_images[0], steps_digits_layers[0], STEPS_IMAGE_RESOURCE_IDS[10], GPoint(54, 47));
     set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));
   }
 }
@@ -574,7 +593,7 @@ static void update_seconds(struct tm *tick_time) {
 static void health_handler(HealthEventType event, void *context) {
   if (event == HealthEventMovementUpdate) {
     // display the step count
-    //int steps = 5;
+    //int steps = 888;
     int steps = ((int)health_service_sum_today(HealthMetricStepCount));
     update_steps(steps);
   }
@@ -614,6 +633,8 @@ static void init(void) {
 
   memset(&date_digits_layers, 0, sizeof(date_digits_layers));
   memset(&date_digits_images, 0, sizeof(date_digits_images));
+  memset(&week_layers, 0, sizeof(week_layers));
+  memset(&week_images, 0, sizeof(week_images));
   memset(&steps_digits_layers, 0, sizeof(steps_digits_layers));
   memset(&steps_digits_images, 0, sizeof(steps_digits_images));
   memset(&battery_percent_layers, 0, sizeof(battery_percent_layers));
@@ -687,7 +708,7 @@ static void init(void) {
  
   bluetooth_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_BLUETOOTH);
   GRect frame3 = (GRect) {
-    .origin = { .x = 17, .y = 5 },
+    .origin = { .x = 7, .y = 5 },
     .size = gbitmap_get_bounds(bluetooth_image).size
   };
   bluetooth_layer = bitmap_layer_create(frame3);
@@ -696,7 +717,7 @@ static void init(void) {
   
   battery_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_BATTERY);
   GRect frame4 = (GRect) {
-    .origin = { .x = 111, .y = 5 },
+    .origin = { .x = 121, .y = 5 },
     .size = gbitmap_get_bounds(battery_image).size
   };
   battery_layer = bitmap_layer_create(frame4);
@@ -708,7 +729,7 @@ static void init(void) {
   layer_add_child(window_layer, bitmap_layer_get_layer(battery_layer));
   
   GRect frame5 = (GRect) {
-    .origin = { .x = 30, .y = 5 },
+    .origin = { .x = 20, .y = 5 },
     .size = {.w = 19, .h = 8}
   };
   time_format_layer = bitmap_layer_create(frame5);
@@ -747,6 +768,10 @@ static void init(void) {
   for (int i = 0; i < TOTAL_STEPS_DIGITS; ++i) {
     steps_digits_layers[i] = bitmap_layer_create(dummy_frame);
     layer_add_child(window_layer, bitmap_layer_get_layer(steps_digits_layers[i]));
+  }
+  for (int i = 0; i < TOTAL_WEEK_DIGITS; ++i) {
+    week_layers[i] = bitmap_layer_create(dummy_frame);
+    layer_add_child(window_layer, bitmap_layer_get_layer(week_layers[i]));
   }
   for (int i = 0; i < TOTAL_BATTERY_PERCENT_DIGITS; ++i) {
     battery_percent_layers[i] = bitmap_layer_create(dummy_frame);
@@ -915,6 +940,14 @@ static void deinit(void) {
     steps_digits_layers[i] = NULL;
   }
 
+   for (int i = 0; i < TOTAL_WEEK_DIGITS; i++) {
+    layer_remove_from_parent(bitmap_layer_get_layer(week_layers[i]));
+    gbitmap_destroy(week_images[i]);
+    week_images[i] = NULL;
+    bitmap_layer_destroy(week_layers[i]);
+    week_layers[i] = NULL;
+  }
+  
   for (int i = 0; i < TOTAL_TIME_DIGITS; i++) {
     layer_remove_from_parent(bitmap_layer_get_layer(time_digits_layers[i]));
     gbitmap_destroy(time_digits_images[i]);

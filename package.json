@@ -20,6 +20,12 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/tiny_wk.png",
+                    "name": "IMAGE_TINY_WK",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
                     "file": "images/datenum_dot.png",
                     "name": "IMAGE_DATENUM_DOT",
                     "targetPlatforms": null,
@@ -540,5 +546,5 @@
             "watchface": true
         }
     },
-    "version": "0.71.0"
+    "version": "0.72.0"
 }
