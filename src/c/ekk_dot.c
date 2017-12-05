@@ -593,7 +593,7 @@ static void update_seconds(struct tm *tick_time) {
 static void health_handler(HealthEventType event, void *context) {
   if (event == HealthEventMovementUpdate) {
     // display the step count
-    //int steps = 888;
+    //int steps = 8888;
     int steps = ((int)health_service_sum_today(HealthMetricStepCount));
     update_steps(steps);
   }
