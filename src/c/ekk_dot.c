@@ -518,7 +518,7 @@ static void update_hours(struct tm *tick_time) {
     
   if (!clock_is_24h_style()) {
     if (tick_time->tm_hour >= 12) {
-      set_container_image(&time_format_image, time_format_layer, RESOURCE_ID_IMAGE_PM_MODE, GPoint(17, 31));
+      set_container_image(&time_format_image, time_format_layer, RESOURCE_ID_IMAGE_PM_MODE, GPoint(20, 5));
       layer_set_hidden(bitmap_layer_get_layer(time_format_layer), false);
     } 
     else {

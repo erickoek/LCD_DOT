@@ -26,124 +26,6 @@
                     "type": "png"
                 },
                 {
-                    "file": "images/datenum_dot.png",
-                    "name": "IMAGE_DATENUM_DOT",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/datenum_t.png",
-                    "name": "IMAGE_DATENUM_T",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/datenum_S.png",
-                    "name": "IMAGE_DATENUM_S",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/testweer.png",
-                    "name": "IMAGE_TESTWEER",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_dec.png",
-                    "name": "IMAGE_MON_NAME_DEC",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_nov.png",
-                    "name": "IMAGE_MON_NAME_NOV",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_okt.png",
-                    "name": "IMAGE_MON_NAME_OKT",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_sep.png",
-                    "name": "IMAGE_MON_NAME_SEP",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_aug.png",
-                    "name": "IMAGE_MON_NAME_AUG",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_jul.png",
-                    "name": "IMAGE_MON_NAME_JUL",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_jun.png",
-                    "name": "IMAGE_MON_NAME_JUN",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_mei.png",
-                    "name": "IMAGE_MON_NAME_MAY",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_apr.png",
-                    "name": "IMAGE_MON_NAME_APR",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_mar.png",
-                    "name": "IMAGE_MON_NAME_MAR",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_feb.png",
-                    "name": "IMAGE_MON_NAME_FEB",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/mon_jan.png",
-                    "name": "IMAGE_MON_NAME_JAN",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/tiny_4.png",
-                    "name": "IMAGE_TINY_4",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/steps.png",
-                    "name": "IMAGE_STEPS",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/menu_icon.png",
-                    "menuIcon": true,
-                    "name": "IMAGE_MENU_ICON",
-                    "targetPlatforms": [
-                        "aplite",
-                        "basalt"
-                    ],
-                    "type": "png"
-                },
-                {
                     "file": "images/tiny_percent.png",
                     "name": "IMAGE_TINY_PERCENT",
                     "targetPlatforms": null,
@@ -180,6 +62,12 @@
                     "type": "png"
                 },
                 {
+                    "file": "images/tiny_4.png",
+                    "name": "IMAGE_TINY_4",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
                     "file": "images/tiny_3.png",
                     "name": "IMAGE_TINY_3",
                     "targetPlatforms": null,
@@ -212,6 +100,18 @@
                 {
                     "file": "images/time_format_24H.png",
                     "name": "IMAGE_24_HOUR_MODE",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/testweer.png",
+                    "name": "IMAGE_TESTWEER",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/steps.png",
+                    "name": "IMAGE_STEPS",
                     "targetPlatforms": null,
                     "type": "png"
                 },
@@ -329,6 +229,88 @@
                     "file": "images/num_0.png",
                     "name": "IMAGE_NUM_0",
                     "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_sep.png",
+                    "name": "IMAGE_MON_NAME_SEP",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_okt.png",
+                    "name": "IMAGE_MON_NAME_OKT",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_nov.png",
+                    "name": "IMAGE_MON_NAME_NOV",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_mei.png",
+                    "name": "IMAGE_MON_NAME_MAY",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_mar.png",
+                    "name": "IMAGE_MON_NAME_MAR",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_jun.png",
+                    "name": "IMAGE_MON_NAME_JUN",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_jul.png",
+                    "name": "IMAGE_MON_NAME_JUL",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_jan.png",
+                    "name": "IMAGE_MON_NAME_JAN",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_feb.png",
+                    "name": "IMAGE_MON_NAME_FEB",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_dec.png",
+                    "name": "IMAGE_MON_NAME_DEC",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_aug.png",
+                    "name": "IMAGE_MON_NAME_AUG",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/mon_apr.png",
+                    "name": "IMAGE_MON_NAME_APR",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/menu_icon.png",
+                    "menuIcon": true,
+                    "name": "IMAGE_MENU_ICON",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt"
+                    ],
                     "type": "png"
                 },
                 {
@@ -455,6 +437,24 @@
                     "type": "png"
                 },
                 {
+                    "file": "images/datenum_t.png",
+                    "name": "IMAGE_DATENUM_T",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/datenum_dot.png",
+                    "name": "IMAGE_DATENUM_DOT",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/datenum_S.png",
+                    "name": "IMAGE_DATENUM_S",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
                     "file": "images/datenum_9.png",
                     "name": "IMAGE_DATENUM_9",
                     "targetPlatforms": null,
@@ -546,5 +546,5 @@
             "watchface": true
         }
     },
-    "version": "0.72.0"
+    "version": "0.73.0"
 }
