@@ -116,56 +116,6 @@
                     "type": "png"
                 },
                 {
-                    "file": "images/sm-9.png",
-                    "name": "IMAGE_SM_9",
-                    "type": "png"
-                },
-                {
-                    "file": "images/sm-8.png",
-                    "name": "IMAGE_SM_8",
-                    "type": "png"
-                },
-                {
-                    "file": "images/sm-7.png",
-                    "name": "IMAGE_SM_7",
-                    "type": "png"
-                },
-                {
-                    "file": "images/sm-6.png",
-                    "name": "IMAGE_SM_6",
-                    "type": "png"
-                },
-                {
-                    "file": "images/sm-5.png",
-                    "name": "IMAGE_SM_5",
-                    "type": "png"
-                },
-                {
-                    "file": "images/sm-4.png",
-                    "name": "IMAGE_SM_4",
-                    "type": "png"
-                },
-                {
-                    "file": "images/sm-3.png",
-                    "name": "IMAGE_SM_3",
-                    "type": "png"
-                },
-                {
-                    "file": "images/sm-2.png",
-                    "name": "IMAGE_SM_2",
-                    "type": "png"
-                },
-                {
-                    "file": "images/sm-1.png",
-                    "name": "IMAGE_SM_1",
-                    "type": "png"
-                },
-                {
-                    "file": "images/sm-0.png",
-                    "name": "IMAGE_SM_0",
-                    "type": "png"
-                },
-                {
                     "file": "images/separator.png",
                     "name": "IMAGE_SEPARATOR",
                     "targetPlatforms": null,
@@ -314,72 +264,6 @@
                     "type": "png"
                 },
                 {
-                    "file": "images/med-separator.png",
-                    "name": "IMAGE_MED_SEPARATOR",
-                    "type": "png"
-                },
-                {
-                    "file": "images/med-9.png",
-                    "name": "IMAGE_MED_9",
-                    "type": "png"
-                },
-                {
-                    "file": "images/med-8.png",
-                    "name": "IMAGE_MED_8",
-                    "type": "png"
-                },
-                {
-                    "file": "images/med-7.png",
-                    "name": "IMAGE_MED_7",
-                    "type": "png"
-                },
-                {
-                    "file": "images/med-6.png",
-                    "name": "IMAGE_MED_6",
-                    "type": "png"
-                },
-                {
-                    "file": "images/med-5.png",
-                    "name": "IMAGE_MED_5",
-                    "type": "png"
-                },
-                {
-                    "file": "images/med-4.png",
-                    "name": "IMAGE_MED_4",
-                    "type": "png"
-                },
-                {
-                    "file": "images/med-3.png",
-                    "name": "IMAGE_MED_3",
-                    "type": "png"
-                },
-                {
-                    "file": "images/med-2.png",
-                    "name": "IMAGE_MED_2",
-                    "type": "png"
-                },
-                {
-                    "file": "images/med-1.png",
-                    "name": "IMAGE_MED_1",
-                    "type": "png"
-                },
-                {
-                    "file": "images/med-0.png",
-                    "name": "IMAGE_MED_0",
-                    "targetPlatforms": null,
-                    "type": "png"
-                },
-                {
-                    "file": "images/icon_meter.png",
-                    "name": "IMAGE_METER_BAR",
-                    "type": "png"
-                },
-                {
-                    "file": "images/icon_mail.png",
-                    "name": "IMAGE_EMAIL",
-                    "type": "png"
-                },
-                {
                     "file": "images/icon_bluetooth.png",
                     "name": "IMAGE_BLUETOOTH",
                     "type": "png"
@@ -515,16 +399,6 @@
                     "type": "png"
                 },
                 {
-                    "file": "images/branding-mask.png",
-                    "name": "IMAGE_BRANDING_MASK",
-                    "type": "png"
-                },
-                {
-                    "file": "images/branding-mask-invert.png",
-                    "name": "IMAGE_BRANDING_MASK_INVERT",
-                    "type": "png"
-                },
-                {
                     "file": "images/background.png",
                     "name": "IMAGE_BACKGROUND",
                     "targetPlatforms": null,
@@ -546,5 +420,5 @@
             "watchface": true
         }
     },
-    "version": "0.73.0"
+    "version": "0.74.0"
 }
