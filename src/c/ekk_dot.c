@@ -396,8 +396,8 @@ static void update_days(struct tm *tick_time) {
   set_container_image(&day_name_image, day_name_layer, DAY_NAME_IMAGE_RESOURCE_IDS[tick_time->tm_wday], GPoint(5, 78));
   set_container_image(&month_name_image, month_name_layer, MONTH_NAME_IMAGE_RESOURCE_IDS[tick_time->tm_mon], GPoint(93, 78));
   
-  set_container_image(&date_digits_images[0], date_digits_layers[0], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday/10], GPoint(59, 78));
-  set_container_image(&date_digits_images[1], date_digits_layers[1], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday%10], GPoint(76, 78));
+  set_container_image(&date_digits_images[0], date_digits_layers[0], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday/10], GPoint(58, 78));
+  set_container_image(&date_digits_images[1], date_digits_layers[1], DATENUM_IMAGE_RESOURCE_IDS[tick_time->tm_mday%10], GPoint(75, 78));
   
   static char week_text[] = "00"; 
   strftime(week_text, sizeof(week_text), "%V", tick_time);
