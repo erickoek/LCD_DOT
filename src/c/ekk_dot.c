@@ -8,6 +8,9 @@ static AppSync sync;
 static uint8_t sync_buffer[128];
 
 #define SETTINGS_KEY 99
+#define PERSIST_KEY_WEATHER 201
+
+int TEMPERATURE;
 
 typedef struct persist {
   int Blink;
@@ -42,7 +45,10 @@ enum {
   BLINK_KEY = 0x0,
   INVERT_KEY = 0x1,
   BLUETOOTHVIBE_KEY = 0x2,
-  HOURLYVIBE_KEY = 0x3
+  HOURLYVIBE_KEY = 0x3,
+  KEY_REQUEST = 0x4,
+  KEY_CONDITION = 0x5,
+  KEY_TEMPERATURE = 0x6
 };
 
 enum {
@@ -76,7 +82,6 @@ static GBitmap *month_name_image;
 static BitmapLayer *month_name_layer;
 
 static Layer *big_time_layer;
-static Layer *med_time_layer;
 
 const int DAY_NAME_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_DAY_NAME_SUN,
@@ -136,6 +141,26 @@ const char STEPS_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_DATENUM_8,
   RESOURCE_ID_IMAGE_DATENUM_9,
   RESOURCE_ID_IMAGE_STEPS
+};
+
+#define TOTAL_TEMP_DIGITS 5 
+static GBitmap *temp_digits_images[TOTAL_TEMP_DIGITS];
+static BitmapLayer *temp_digits_layers[TOTAL_TEMP_DIGITS];
+
+const char TEMP_IMAGE_RESOURCE_IDS[] = {
+  RESOURCE_ID_IMAGE_DATENUM_0,
+  RESOURCE_ID_IMAGE_DATENUM_1,
+  RESOURCE_ID_IMAGE_DATENUM_2,
+  RESOURCE_ID_IMAGE_DATENUM_3,
+  RESOURCE_ID_IMAGE_DATENUM_4,
+  RESOURCE_ID_IMAGE_DATENUM_5,
+  RESOURCE_ID_IMAGE_DATENUM_6,
+  RESOURCE_ID_IMAGE_DATENUM_7,
+  RESOURCE_ID_IMAGE_DATENUM_8,
+  RESOURCE_ID_IMAGE_DATENUM_9,
+  RESOURCE_ID_IMAGE_TEMP,
+  RESOURCE_ID_IMAGE_CELSIUS,
+  RESOURCE_ID_IMAGE_MINUS
 };
 
 
@@ -243,6 +268,15 @@ void change_battery_icon(bool charging) {
   layer_mark_dirty(bitmap_layer_get_layer(battery_image_layer));
 }
 
+void refresh_weather()
+  {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Refresh weather");
+    DictionaryIterator *iter;
+    app_message_outbox_begin(&iter);
+    dict_write_uint32(iter, 8, 0);
+    app_message_outbox_send();
+}
+
 static void handle_tick(struct tm *tick_time, TimeUnits units_changed);
 
 static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tuple, const Tuple* old_tuple, void* context) {
@@ -268,10 +302,16 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
     case HOURLYVIBE_KEY:
       settings.HourlyVibe = new_tuple->value->uint8;
       break;
+    
+    case KEY_TEMPERATURE:
+      TEMPERATURE = new_tuple->value->int16; 
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "Temperature %d, write persist... ", TEMPERATURE);
+      persist_write_int(PERSIST_KEY_WEATHER, TEMPERATURE);
+      break;
+     
 		 
       tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);
      	layer_set_hidden(big_time_layer, false);
-			layer_set_hidden(med_time_layer, true);		
 			
 			appStarted = false;
 			time_t now = time(NULL);
@@ -362,6 +402,7 @@ static void update_days(struct tm *tick_time) {
   static char week_text[] = "00"; 
   strftime(week_text, sizeof(week_text), "%V", tick_time);
   int week = atoi(week_text);
+
   set_container_image(&week_images[0], week_layers[0], WEEK_IMAGE_RESOURCE_IDS[10], GPoint(56, 5));
   set_container_image(&week_images[1], week_layers[1], WEEK_IMAGE_RESOURCE_IDS[week/10], GPoint(72, 5));
   set_container_image(&week_images[2], week_layers[2], WEEK_IMAGE_RESOURCE_IDS[week%10], GPoint(78, 5));
@@ -401,7 +442,42 @@ static void update_steps(int steps) {
     set_container_image(&steps_digits_images[4], steps_digits_layers[4], STEPS_IMAGE_RESOURCE_IDS[steps%10], GPoint(126, 48));
   }
 }
-   
+ 
+static void update_temp(int TEMPERATURE) {
+  if( TEMPERATURE == 200 ){
+    set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
+    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(92, 20));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(109, 20));
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
+  }
+  
+  else if( ((TEMPERATURE/10)%10) != 0 && TEMPERATURE >=0 ){
+    set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
+    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[(TEMPERATURE/10)%10], GPoint(92, 21));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));  
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
+  }
+  else if(  ((TEMPERATURE/10)%10) == 0 && TEMPERATURE >=0 ){
+    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));
+     set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
+  }
+  else if( ((TEMPERATURE/10)%10) != 0 && TEMPERATURE < 0 ){
+    TEMPERATURE = abs(TEMPERATURE);
+    set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
+    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(75, 20));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[(TEMPERATURE/10)%10], GPoint(92, 21));
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));  
+    set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
+  }
+  else if( ((TEMPERATURE/10)%10) == 0 && TEMPERATURE < 0){
+    TEMPERATURE = abs(TEMPERATURE);
+    set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
+    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(92, 20));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
+  }
+    }
 
 static void update_hours(struct tm *tick_time) {
 
@@ -436,6 +512,9 @@ static void update_hours(struct tm *tick_time) {
 }
 
 static void update_minutes(struct tm *tick_time) {
+  //APP_LOG(APP_LOG_LEVEL_DEBUG, "Minute Temperature %d ", TEMPERATURE);
+  //refresh_weather();
+  //update_temp(TEMPERATURE);
 		set_container_image(&time_digits_images[2], time_digits_layers[2], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min/10], GPoint(87, 117));
 		set_container_image(&time_digits_images[3], time_digits_layers[3], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min%10], GPoint(115, 117));
 }
@@ -473,10 +552,16 @@ static void handle_tick(struct tm *tick_time, TimeUnits units_changed) {
   }
   if (units_changed & MINUTE_UNIT) {
     update_minutes(tick_time);
+    update_temp(TEMPERATURE);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Updating temperature display");
   } 
   if (units_changed & SECOND_UNIT) {
     update_seconds(tick_time);
-  }   
+  }
+  if (tick_time->tm_min % 15 == 0 && tick_time->tm_sec == 0) {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Updating weather tick_based");
+    refresh_weather();
+  }
 }
 
 static void loadPersistentSettings() {  
@@ -487,6 +572,17 @@ static void savePersistentSettings() {
   valueWritten = persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
 }
 
+static void LoadPersistentWeather() {
+  if (persist_exists(PERSIST_KEY_WEATHER)) {
+        TEMPERATURE = persist_read_int(PERSIST_KEY_WEATHER);
+    } else {
+        TEMPERATURE = 200;
+    }
+}
+
+static void SavePersistentWeather() {
+  persist_write_int(PERSIST_KEY_WEATHER, TEMPERATURE);
+}
 
 static void init(void) {
   memset(&time_digits_layers, 0, sizeof(time_digits_layers));
@@ -497,12 +593,15 @@ static void init(void) {
   memset(&week_images, 0, sizeof(week_images));
   memset(&steps_digits_layers, 0, sizeof(steps_digits_layers));
   memset(&steps_digits_images, 0, sizeof(steps_digits_images));
+  memset(&temp_digits_layers, 0, sizeof(temp_digits_layers));
+  memset(&temp_digits_images, 0, sizeof(temp_digits_images));
   memset(&battery_percent_layers, 0, sizeof(battery_percent_layers));
   memset(&battery_percent_image, 0, sizeof(battery_percent_image));
 
   const int inbound_size = 128;
   const int outbound_size = 128;
   app_message_open(inbound_size, outbound_size);  
+  TEMPERATURE = 200;
 
   window = window_create();
   if (window == NULL) {
@@ -514,6 +613,9 @@ static void init(void) {
   
   loadPersistentSettings();
   
+  LoadPersistentWeather();
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "INIT: Temperature from persist storage %d ", TEMPERATURE);
+  
   background_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_BACKGROUND);
   background_layer = bitmap_layer_create(layer_get_frame(window_layer));
   bitmap_layer_set_bitmap(background_layer, background_image);
@@ -522,10 +624,8 @@ static void init(void) {
   big_time_layer = layer_create(layer_get_frame(window_layer));
   layer_add_child(window_layer, big_time_layer);
   
-  med_time_layer = layer_create(layer_get_frame(window_layer));
-  layer_add_child(window_layer, med_time_layer);
-  
   separator_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_SEPARATOR);
+  
   GRect frame_steps = (GRect) {
     .origin = { .x = 59, .y = 117},
     .size = gbitmap_get_bounds(separator_image).size
@@ -591,6 +691,10 @@ static void init(void) {
     steps_digits_layers[i] = bitmap_layer_create(dummy_frame);
     layer_add_child(window_layer, bitmap_layer_get_layer(steps_digits_layers[i]));
   }
+  for (int i = 0; i < TOTAL_TEMP_DIGITS; ++i) {
+    temp_digits_layers[i] = bitmap_layer_create(dummy_frame);
+    layer_add_child(window_layer, bitmap_layer_get_layer(temp_digits_layers[i]));
+  }
   for (int i = 0; i < TOTAL_WEEK_DIGITS; ++i) {
     week_layers[i] = bitmap_layer_create(dummy_frame);
     layer_add_child(window_layer, bitmap_layer_get_layer(week_layers[i]));
@@ -607,14 +711,15 @@ static void init(void) {
     TupletInteger(BLINK_KEY, settings.Blink),
     TupletInteger(INVERT_KEY, settings.Invert),
     TupletInteger(BLUETOOTHVIBE_KEY, settings.BluetoothVibe),
-    TupletInteger(HOURLYVIBE_KEY, settings.HourlyVibe)
+    TupletInteger(HOURLYVIBE_KEY, settings.HourlyVibe),
+    //TupletInteger(KEY_REQUEST, settings.HourlyVibe),
+    //TupletInteger(KEY_CONDITION, settings.HourlyVibe),
+    TupletInteger(KEY_TEMPERATURE, TEMPERATURE),
   };
   
   app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values),
       sync_tuple_changed_callback, NULL, NULL);
    
-  
-
   bool _true = true;
   bool _false = false;
   separator_animation = property_animation_create(&layer_hidden_implementation, bitmap_layer_get_layer(separator_layer), &_false, &_true);
@@ -625,12 +730,15 @@ static void init(void) {
   // Avoids a blank screen on watch start.
   time_t now = time(NULL);
   struct tm *tick_time = localtime(&now);  
+
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "refresh on start");
   handle_tick(tick_time, DAY_UNIT + HOUR_UNIT + MINUTE_UNIT + SECOND_UNIT);
 
   appStarted = true;
 
 	tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);
-	
+	refresh_weather();
+  
   bluetooth_connection_service_subscribe(bluetooth_connection_callback);
   battery_state_service_subscribe(&update_battery);
   
@@ -648,6 +756,8 @@ static void init(void) {
 static void deinit(void) {
 
   savePersistentSettings();
+  
+  SavePersistentWeather();
 
   app_sync_deinit(&sync);
   
@@ -714,7 +824,14 @@ static void deinit(void) {
     bitmap_layer_destroy(steps_digits_layers[i]);
     steps_digits_layers[i] = NULL;
   }
-
+  for (int i = 0; i < TOTAL_TEMP_DIGITS; i++) {
+    layer_remove_from_parent(bitmap_layer_get_layer(temp_digits_layers[i]));
+    gbitmap_destroy(temp_digits_images[i]);
+    temp_digits_images[i] = NULL;
+    bitmap_layer_destroy(temp_digits_layers[i]);
+    temp_digits_layers[i] = NULL;
+  }
+  
    for (int i = 0; i < TOTAL_WEEK_DIGITS; i++) {
     layer_remove_from_parent(bitmap_layer_get_layer(week_layers[i]));
     gbitmap_destroy(week_images[i]);
@@ -741,9 +858,6 @@ static void deinit(void) {
   
   layer_remove_from_parent(big_time_layer);
   big_time_layer = NULL;
-  
-  layer_remove_from_parent(med_time_layer);
-  med_time_layer = NULL;
   
   appStarted = NULL;
   

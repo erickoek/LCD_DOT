@@ -5,12 +5,16 @@
     "name": "lcd_dot",
     "pebble": {
         "capabilities": [
+            "location",
             "configurable",
             "health"
         ],
         "displayName": "LCD_DOT",
         "enableMultiJS": false,
         "messageKeys": {
+            "KEY_CONDITION": 5,
+            "KEY_REQUEST": 4,
+            "KEY_TEMPERATURE": 6,
             "blink": 0,
             "bluetoothvibe": 2,
             "hourlyvibe": 3,
@@ -19,6 +23,26 @@
         "projectType": "native",
         "resources": {
             "media": [
+                {
+                    "file": "images/minus.png",
+                    "name": "IMAGE_MINUS",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/celsius.png",
+                    "name": "IMAGE_CELSIUS",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/temp.png",
+                    "name": "IMAGE_TEMP",
+                    "targetPlatforms": [
+                        "basalt"
+                    ],
+                    "type": "png"
+                },
                 {
                     "file": "images/tiny_wk.png",
                     "name": "IMAGE_TINY_WK",
@@ -420,5 +444,5 @@
             "watchface": true
         }
     },
-    "version": "0.74.0"
+    "version": "0.82.0"
 }
