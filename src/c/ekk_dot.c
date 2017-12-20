@@ -8,9 +8,10 @@ static AppSync sync;
 static uint8_t sync_buffer[128];
 
 #define SETTINGS_KEY 99
-#define PERSIST_KEY_WEATHER 201
+#define PERSIST_KEY_TEMPERATURE 201
+#define PERSIST_KEY_CONDITION 202
 
-int TEMPERATURE;
+int TEMPERATURE, CONDITION;
 
 typedef struct persist {
   int Blink;
@@ -163,6 +164,20 @@ const char TEMP_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_MINUS
 };
 
+static GBitmap *condition_image;
+static BitmapLayer *condition_layer;
+
+const int CONDITION_IMAGE_RESOURCE_IDS[] = {
+  RESOURCE_ID_IMAGE_SUNNY,
+  RESOURCE_ID_IMAGE_SCATTERED_CLOUDS,
+  RESOURCE_ID_IMAGE_BROKEN_CLOUDS,
+  RESOURCE_ID_IMAGE_FEW_CLOUDS,
+  RESOURCE_ID_IMAGE_MIST,
+  RESOURCE_ID_IMAGE_RAIN,
+  RESOURCE_ID_IMAGE_SHOWER_RAIN,
+  RESOURCE_ID_IMAGE_SNOW,
+  RESOURCE_ID_IMAGE_THUNDERSTORM
+};
 
 #define TOTAL_TIME_DIGITS 4
 static GBitmap *time_digits_images[TOTAL_TIME_DIGITS];
@@ -306,9 +321,14 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
     case KEY_TEMPERATURE:
       TEMPERATURE = new_tuple->value->int16; 
       APP_LOG(APP_LOG_LEVEL_DEBUG, "Temperature %d, write persist... ", TEMPERATURE);
-      persist_write_int(PERSIST_KEY_WEATHER, TEMPERATURE);
-      break;
-     
+      persist_write_int(PERSIST_KEY_TEMPERATURE, TEMPERATURE);
+    break;
+    
+    case KEY_CONDITION:
+      CONDITION = new_tuple->value->int16; 
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "Condition code %d, write persist... ", CONDITION);
+      persist_write_int(PERSIST_KEY_CONDITION, CONDITION);
+    break;
 		 
       tick_timer_service_subscribe(MINUTE_UNIT, handle_tick);
      	layer_set_hidden(big_time_layer, false);
@@ -443,7 +463,12 @@ static void update_steps(int steps) {
   }
 }
  
-static void update_temp(int TEMPERATURE) {
+static void update_temp(int TEMPERATURE, int CONDITION) {
+  
+  set_container_image(&condition_image, condition_layer, CONDITION_IMAGE_RESOURCE_IDS[CONDITION], GPoint(1, 19));
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Condition in update_temp function: %d ", CONDITION);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Temperature in update_temp function: %d ", TEMPERATURE);
+  
   if( TEMPERATURE == 200 ){
     set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
     set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(92, 20));
@@ -478,6 +503,7 @@ static void update_temp(int TEMPERATURE) {
     set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
   }
     }
+  
 
 static void update_hours(struct tm *tick_time) {
 
@@ -512,9 +538,6 @@ static void update_hours(struct tm *tick_time) {
 }
 
 static void update_minutes(struct tm *tick_time) {
-  //APP_LOG(APP_LOG_LEVEL_DEBUG, "Minute Temperature %d ", TEMPERATURE);
-  //refresh_weather();
-  //update_temp(TEMPERATURE);
 		set_container_image(&time_digits_images[2], time_digits_layers[2], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min/10], GPoint(87, 117));
 		set_container_image(&time_digits_images[3], time_digits_layers[3], BIG_DIGIT_IMAGE_RESOURCE_IDS[tick_time->tm_min%10], GPoint(115, 117));
 }
@@ -552,8 +575,9 @@ static void handle_tick(struct tm *tick_time, TimeUnits units_changed) {
   }
   if (units_changed & MINUTE_UNIT) {
     update_minutes(tick_time);
-    update_temp(TEMPERATURE);
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Updating temperature display");
+    update_temp(TEMPERATURE, CONDITION);
+    //refresh_weather();
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Updating weather display");
   } 
   if (units_changed & SECOND_UNIT) {
     update_seconds(tick_time);
@@ -573,15 +597,21 @@ static void savePersistentSettings() {
 }
 
 static void LoadPersistentWeather() {
-  if (persist_exists(PERSIST_KEY_WEATHER)) {
-        TEMPERATURE = persist_read_int(PERSIST_KEY_WEATHER);
+  if (persist_exists(PERSIST_KEY_TEMPERATURE)) {
+        TEMPERATURE = persist_read_int(PERSIST_KEY_TEMPERATURE);
     } else {
         TEMPERATURE = 200;
+    }
+  if (persist_exists(PERSIST_KEY_CONDITION)) {
+        CONDITION = persist_read_int(PERSIST_KEY_CONDITION);
+    } else {
+        CONDITION = 1;
     }
 }
 
 static void SavePersistentWeather() {
-  persist_write_int(PERSIST_KEY_WEATHER, TEMPERATURE);
+  persist_write_int(PERSIST_KEY_TEMPERATURE, TEMPERATURE);
+  persist_write_int(PERSIST_KEY_CONDITION, CONDITION);
 }
 
 static void init(void) {
@@ -601,7 +631,7 @@ static void init(void) {
   const int inbound_size = 128;
   const int outbound_size = 128;
   app_message_open(inbound_size, outbound_size);  
-  TEMPERATURE = 200;
+  //TEMPERATURE = 200;
 
   window = window_create();
   if (window == NULL) {
@@ -615,6 +645,7 @@ static void init(void) {
   
   LoadPersistentWeather();
   APP_LOG(APP_LOG_LEVEL_DEBUG, "INIT: Temperature from persist storage %d ", TEMPERATURE);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "INIT: Condition from persist storage %d ", CONDITION);
   
   background_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_BACKGROUND);
   background_layer = bitmap_layer_create(layer_get_frame(window_layer));
@@ -679,6 +710,9 @@ static void init(void) {
   month_name_layer = bitmap_layer_create(dummy_frame);
   layer_add_child(window_layer, bitmap_layer_get_layer(month_name_layer));
   
+  condition_layer = bitmap_layer_create(dummy_frame);
+  layer_add_child(window_layer, bitmap_layer_get_layer(condition_layer));
+  
   for (int i = 0; i < TOTAL_TIME_DIGITS; ++i) {
     time_digits_layers[i] = bitmap_layer_create(dummy_frame);
     layer_add_child(big_time_layer, bitmap_layer_get_layer(time_digits_layers[i]));
@@ -713,7 +747,7 @@ static void init(void) {
     TupletInteger(BLUETOOTHVIBE_KEY, settings.BluetoothVibe),
     TupletInteger(HOURLYVIBE_KEY, settings.HourlyVibe),
     //TupletInteger(KEY_REQUEST, settings.HourlyVibe),
-    //TupletInteger(KEY_CONDITION, settings.HourlyVibe),
+    TupletInteger(KEY_CONDITION, CONDITION),
     TupletInteger(KEY_TEMPERATURE, TEMPERATURE),
   };
   
@@ -808,6 +842,11 @@ static void deinit(void) {
   bitmap_layer_destroy(month_name_layer);
   gbitmap_destroy(month_name_image);
   month_name_image = NULL;
+  
+  layer_remove_from_parent(bitmap_layer_get_layer(condition_layer));
+  bitmap_layer_destroy(condition_layer);
+  gbitmap_destroy(condition_image);
+  condition_image = NULL;
   
   for (int i = 0; i < TOTAL_DATE_DIGITS; i++) {
     layer_remove_from_parent(bitmap_layer_get_layer(date_digits_layers[i]));

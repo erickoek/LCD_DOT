@@ -97,6 +97,34 @@ function locationError(err) {
     updateInProgress = false;
 }
 
+var OWM_ICONS = {
+    // see http://openweathermap.org/weather-conditions for details
+    // day icons
+    "01d": 0, // sun
+    "02d": 3, // cloud and sun
+    "03d": 1, // cloud
+    "04d": 2, // clouds
+    "09d": 6, // rain drops
+    "10d": 5, // rain drops
+    "11d": 8, // lightning
+    "13d": 7, // snow flake
+    "50d": 4, // mist
+    // night icons
+    "01n": 0,
+    "02n": 3,
+    "03n": 1,
+    "04n": 2,
+    "09n": 6,
+    "10n": 5,
+    "11n": 8,
+    "13n": 7,
+    "50n": 4
+};
+
+function parseIconOpenWeatherMap(icon) {
+    return OWM_ICONS[icon];
+}
+
 function fetchWeather(latitude, longitude) {
     console.log(latitude + " " + longitude);
     var response;
@@ -119,11 +147,16 @@ function fetchWeather(latitude, longitude) {
                         // Otherwise, convert temperature to Celsius
                         temperature = Math.round(tempResult - 273.15);
                     }		 
-                    condition = response.weather[0].id;
+                    //condition = response.weather[0].icon;
+                    condition = parseIconOpenWeatherMap(response.weather[0].icon);
 
 
-                    console.log("Temperature: " + temperature + " Condition: " + condition);
-                  Pebble.sendAppMessage({"KEY_REQUEST":0, "KEY_CONDITION": condition,"KEY_TEMPERATURE": temperature});
+                    console.log("Temperature: " + temperature);
+                  Pebble.sendAppMessage({"KEY_TEMPERATURE": temperature});
+                    updateInProgress = false;
+                  
+                   console.log(" Condition: " + condition);
+                  Pebble.sendAppMessage({"KEY_CONDITION": condition});
                     updateInProgress = false;
                 }
             } else {

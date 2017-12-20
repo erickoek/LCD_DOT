@@ -24,6 +24,60 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/weather_rain.png",
+                    "name": "IMAGE_RAIN",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/weather_fewclouds.png",
+                    "name": "IMAGE_FEW_CLOUDS",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/weather_scatteredclouds.png",
+                    "name": "IMAGE_SCATTERED_CLOUDS",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/weather_thunderstorm.png",
+                    "name": "IMAGE_THUNDERSTORM",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/weather_snow.png",
+                    "name": "IMAGE_SNOW",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/weather_showerrain.png",
+                    "name": "IMAGE_SHOWER_RAIN",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/weather_brokenclouds.png",
+                    "name": "IMAGE_BROKEN_CLOUDS",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/weather_mist.png",
+                    "name": "IMAGE_MIST",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/weather_sunny.png",
+                    "name": "IMAGE_SUNNY",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
                     "file": "images/minus.png",
                     "name": "IMAGE_MINUS",
                     "targetPlatforms": null,
@@ -444,5 +498,5 @@
             "watchface": true
         }
     },
-    "version": "0.83.0"
+    "version": "0.89.0"
 }
