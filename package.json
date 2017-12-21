@@ -24,6 +24,36 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/Fahrenheit.png",
+                    "name": "IMAGE_FAHRENHEIT",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/weather_Rain_night.png",
+                    "name": "IMAGE_RAIN_NIGHT",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/weather_FewClouds_night.png",
+                    "name": "IMAGE_FEWCLOUDS_NIGHT",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/weather_moon.png",
+                    "name": "IMAGE_MOON",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/Weather_unknown.png",
+                    "name": "IMAGE_UNKNOWN",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
                     "file": "images/weather_rain.png",
                     "name": "IMAGE_RAIN",
                     "targetPlatforms": null,
@@ -498,5 +528,5 @@
             "watchface": true
         }
     },
-    "version": "0.89.0"
+    "version": "0.86.0"
 }

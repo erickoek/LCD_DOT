@@ -161,7 +161,8 @@ const char TEMP_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_DATENUM_9,
   RESOURCE_ID_IMAGE_TEMP,
   RESOURCE_ID_IMAGE_CELSIUS,
-  RESOURCE_ID_IMAGE_MINUS
+  RESOURCE_ID_IMAGE_MINUS,
+  RESOURCE_ID_IMAGE_FAHRENHEIT
 };
 
 static GBitmap *condition_image;
@@ -176,7 +177,11 @@ const int CONDITION_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_RAIN,
   RESOURCE_ID_IMAGE_SHOWER_RAIN,
   RESOURCE_ID_IMAGE_SNOW,
-  RESOURCE_ID_IMAGE_THUNDERSTORM
+  RESOURCE_ID_IMAGE_THUNDERSTORM,
+  RESOURCE_ID_IMAGE_MOON,
+  RESOURCE_ID_IMAGE_FEWCLOUDS_NIGHT,
+  RESOURCE_ID_IMAGE_RAIN_NIGHT,
+  RESOURCE_ID_IMAGE_UNKNOWN
 };
 
 #define TOTAL_TIME_DIGITS 4
@@ -469,23 +474,31 @@ static void update_temp(int TEMPERATURE, int CONDITION) {
   APP_LOG(APP_LOG_LEVEL_DEBUG, "Condition in update_temp function: %d ", CONDITION);
   APP_LOG(APP_LOG_LEVEL_DEBUG, "Temperature in update_temp function: %d ", TEMPERATURE);
   
+  if(TEMPERATURE > 250 ){
+    TEMPERATURE =TEMPERATURE - 400;
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[13], GPoint(126, 21));
+  }
+  else {
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 21));
+  }
+  
   if( TEMPERATURE == 200 ){
     set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
     set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(92, 20));
     set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(109, 20));
-    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
+    //set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 21));
   }
   
   else if( ((TEMPERATURE/10)%10) != 0 && TEMPERATURE >=0 ){
     set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
     set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[(TEMPERATURE/10)%10], GPoint(92, 21));
     set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));  
-    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
+    //set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 21));
   }
   else if(  ((TEMPERATURE/10)%10) == 0 && TEMPERATURE >=0 ){
     set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
     set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));
-     set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
+    //set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 21));
   }
   else if( ((TEMPERATURE/10)%10) != 0 && TEMPERATURE < 0 ){
     TEMPERATURE = abs(TEMPERATURE);
@@ -493,14 +506,14 @@ static void update_temp(int TEMPERATURE, int CONDITION) {
     set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(75, 20));
     set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[(TEMPERATURE/10)%10], GPoint(92, 21));
     set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));  
-    set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
+    //set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 21));
   }
   else if( ((TEMPERATURE/10)%10) == 0 && TEMPERATURE < 0){
     TEMPERATURE = abs(TEMPERATURE);
     set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
     set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(92, 20));
     set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));
-    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
+    //set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
   }
     }
   
@@ -605,7 +618,7 @@ static void LoadPersistentWeather() {
   if (persist_exists(PERSIST_KEY_CONDITION)) {
         CONDITION = persist_read_int(PERSIST_KEY_CONDITION);
     } else {
-        CONDITION = 1;
+        CONDITION = 12;
     }
 }
 

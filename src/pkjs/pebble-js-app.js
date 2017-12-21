@@ -93,7 +93,7 @@ function locationSuccess(pos) {
 function locationError(err) {
     console.warn('Location error (' + err.code + '): ' + err.message);
     console.log("Location error");  
-    Pebble.sendAppMessage({"KEY_REQUEST":0, "KEY_CONDITION": 1,"KEY_TEMPERATURE": 200});
+    Pebble.sendAppMessage({"KEY_REQUEST":0, "KEY_CONDITION": 12,"KEY_TEMPERATURE": 200});
     updateInProgress = false;
 }
 
@@ -110,12 +110,12 @@ var OWM_ICONS = {
     "13d": 7, // snow flake
     "50d": 4, // mist
     // night icons
-    "01n": 0,
-    "02n": 3,
+    "01n": 9,
+    "02n": 10,
     "03n": 1,
     "04n": 2,
     "09n": 6,
-    "10n": 5,
+    "10n": 11,
     "11n": 8,
     "13n": 7,
     "50n": 4
@@ -141,7 +141,7 @@ function fetchWeather(latitude, longitude) {
                     var tempResult = response.main.temp;
                     if (response.sys.country === "US") {
                         // Convert temperature to Fahrenheit if user is within the US
-                        temperature = Math.round(((tempResult - 273.15) * 1.8) + 32);
+                        temperature = 400 + Math.round(((tempResult - 273.15) * 1.8) + 32);
                     }
                     else {
                         // Otherwise, convert temperature to Celsius
@@ -163,7 +163,7 @@ function fetchWeather(latitude, longitude) {
                 //console.log("Error");
                 updateInProgress = false;
                 console.log("HTTP error");
-                  Pebble.sendAppMessage({"KEY_REQUEST":0, "KEY_CONDITION": 1,"KEY_TEMPERATURE": 200});
+                  Pebble.sendAppMessage({"KEY_REQUEST":0, "KEY_CONDITION": 12,"KEY_TEMPERATURE": 200});
             }
         }
     };
