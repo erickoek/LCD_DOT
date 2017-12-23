@@ -24,8 +24,20 @@
         "resources": {
             "media": [
                 {
-                    "file": "images/Fahrenheit.png",
-                    "name": "IMAGE_FAHRENHEIT",
+                    "file": "images/F.png",
+                    "name": "IMAGE_F",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/C.png",
+                    "name": "IMAGE_C",
+                    "targetPlatforms": null,
+                    "type": "png"
+                },
+                {
+                    "file": "images/Degree.png",
+                    "name": "IMAGE_DEGREE",
                     "targetPlatforms": null,
                     "type": "png"
                 },
@@ -528,5 +540,5 @@
             "watchface": true
         }
     },
-    "version": "0.87.0"
+    "version": "0.90.0"
 }

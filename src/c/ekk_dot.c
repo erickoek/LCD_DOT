@@ -12,6 +12,7 @@ static uint8_t sync_buffer[128];
 #define PERSIST_KEY_CONDITION 202
 
 int TEMPERATURE, CONDITION;
+bool Celsius;
 
 typedef struct persist {
   int Blink;
@@ -162,7 +163,9 @@ const char TEMP_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_TEMP,
   RESOURCE_ID_IMAGE_CELSIUS,
   RESOURCE_ID_IMAGE_MINUS,
-  RESOURCE_ID_IMAGE_FAHRENHEIT
+  RESOURCE_ID_IMAGE_DEGREE,
+  RESOURCE_ID_IMAGE_C,
+  RESOURCE_ID_IMAGE_F
 };
 
 static GBitmap *condition_image;
@@ -475,30 +478,50 @@ static void update_temp(int TEMPERATURE, int CONDITION) {
   APP_LOG(APP_LOG_LEVEL_DEBUG, "Temperature in update_temp function: %d ", TEMPERATURE);
   
   if(TEMPERATURE > 250 ){
+    Celsius = false;
     TEMPERATURE =TEMPERATURE - 400;
-    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[13], GPoint(126, 21));
   }
   else {
-    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 21));
+    Celsius = true;
   }
   
   if( TEMPERATURE == 200 ){
     set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
     set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(92, 20));
     set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(109, 20));
-    //set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 21));
   }
-  
-  else if( ((TEMPERATURE/10)%10) != 0 && TEMPERATURE >=0 ){
+  else if( ((TEMPERATURE/100)%10) != 0 && Celsius == false ){
     set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
-    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[(TEMPERATURE/10)%10], GPoint(92, 21));
-    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));  
-    //set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 21));
+    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[(TEMPERATURE/100)%10], GPoint(75, 21));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[(TEMPERATURE/10)%10], GPoint(92, 21));
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));  
+    set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[13], GPoint(126, 21));  
   }
-  else if(  ((TEMPERATURE/10)%10) == 0 && TEMPERATURE >=0 ){
+  else if( ((TEMPERATURE/10)%10) != 0 && TEMPERATURE >=0 && Celsius == false ){
+    set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
+    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[(TEMPERATURE/10)%10], GPoint(75, 21));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(92, 21));  
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[13], GPoint(109, 21));
+    set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[15], GPoint(126, 21));
+  }
+  else if( ((TEMPERATURE/10)%10) != 0 && TEMPERATURE >=0 && Celsius == true ){
+    set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
+    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[(TEMPERATURE/10)%10], GPoint(75, 21));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(92, 21));  
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[13], GPoint(109, 20));
+    set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[14], GPoint(126, 21));
+  }
+  else if( ((TEMPERATURE/10)%10) == 0 && TEMPERATURE >=0 && Celsius == false ){
     set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
-    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));
-    //set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 21));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(92, 21));
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[13], GPoint(109, 20));
+    set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[15], GPoint(126, 21));
+  }
+  else if(  ((TEMPERATURE/10)%10) == 0 && TEMPERATURE >=0 && Celsius == true ){
+    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(92, 21));
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[13], GPoint(109, 20));
+    set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[14], GPoint(126, 21));
   }
   else if( ((TEMPERATURE/10)%10) != 0 && TEMPERATURE < 0 ){
     TEMPERATURE = abs(TEMPERATURE);
@@ -506,14 +529,23 @@ static void update_temp(int TEMPERATURE, int CONDITION) {
     set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(75, 20));
     set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[(TEMPERATURE/10)%10], GPoint(92, 21));
     set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));  
-    //set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 21));
+    set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[13], GPoint(126, 21));
   }
-  else if( ((TEMPERATURE/10)%10) == 0 && TEMPERATURE < 0){
+  else if( ((TEMPERATURE/10)%10) == 0 && TEMPERATURE < 0 && Celsius == false ){
     TEMPERATURE = abs(TEMPERATURE);
     set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
-    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(92, 20));
-    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(109, 21));
-    //set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[11], GPoint(126, 20));
+    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(75, 20));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(92, 21));
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[13], GPoint(109, 20));
+    set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[15], GPoint(126, 20));
+  }
+  else if( ((TEMPERATURE/10)%10) == 0 && TEMPERATURE < 0 && Celsius == true ){
+    TEMPERATURE = abs(TEMPERATURE);
+    set_container_image(&temp_digits_images[0], temp_digits_layers[0], TEMP_IMAGE_RESOURCE_IDS[10], GPoint(54, 20));
+    set_container_image(&temp_digits_images[1], temp_digits_layers[1], TEMP_IMAGE_RESOURCE_IDS[12], GPoint(75, 20));
+    set_container_image(&temp_digits_images[2], temp_digits_layers[2], TEMP_IMAGE_RESOURCE_IDS[TEMPERATURE%10], GPoint(92, 21));
+    set_container_image(&temp_digits_images[3], temp_digits_layers[3], TEMP_IMAGE_RESOURCE_IDS[13], GPoint(109, 20));
+    set_container_image(&temp_digits_images[4], temp_digits_layers[4], TEMP_IMAGE_RESOURCE_IDS[14], GPoint(126, 20));
   }
     }
   
