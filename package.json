@@ -527,6 +527,7 @@
                 {
                     "file": "images/background-invert.png",
                     "name": "IMAGE_BACKGROUND_INVERT",
+                    "targetPlatforms": null,
                     "type": "png"
                 }
             ]

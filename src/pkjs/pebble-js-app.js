@@ -45,7 +45,7 @@ function loadLocalData() {
 	mConfig.bluetoothvibe = parseInt(localStorage.getItem("bluetoothvibe"));
 	mConfig.hourlyvibe = parseInt(localStorage.getItem("hourlyvibe"));
 	
-	mConfig.configureUrl = "https://www.koekfamily.nl/LCD_DOT/LCD_DOT.html";
+	mConfig.configureUrl = "https://www.koekfamily.nl/LCD_DOT/LCD_DOT_Test.html";
 	
 	if(isNaN(mConfig.blink)) {
 		mConfig.blink = 1;

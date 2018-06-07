@@ -11,11 +11,11 @@ static uint8_t sync_buffer[128];
 #define PERSIST_KEY_TEMPERATURE 201
 #define PERSIST_KEY_CONDITION 202
 
-int TEMPERATURE, CONDITION;
+int TEMPERATURE, CONDITION, COLOR_SET;
 bool Celsius;
 
 typedef struct persist {
-  int Blink;
+    int Blink;
     int Invert;
     int BluetoothVibe;
     int HourlyVibe;
@@ -239,18 +239,14 @@ const int TINY_IMAGE_RESOURCE_IDS[] = {
   RESOURCE_ID_IMAGE_TINY_9,
   RESOURCE_ID_IMAGE_TINY_PERCENT
 };
-#define palette_num 5
+#define palette_num 2
 #ifdef PBL_COLOR
 uint8_t my_palettes[2* palette_num]= {
-    //GColorYellowARGB8, GColorDukeBlueARGB8, //user define
-    GColorBlackARGB8, GColorWhiteARGB8,  
-    GColorWhiteARGB8, GColorBlackARGB8,   //black-white
-    GColorBlackARGB8, GColorYellowARGB8, 
-    GColorWhiteARGB8, GColorDukeBlueARGB8,
-    GColorBlackARGB8, GColorCyanARGB8
+    GColorBlackARGB8, GColorWhiteARGB8,      
+    GColorWhiteARGB8, GColorBlackARGB8
 };
 #endif
-enum {COLOUR_USER, COLOUR_BW, COLOUR_YELLOW, COLOUR_DukeBlue, COLOUR_CYEN };
+enum {COLOUR_USER, COLOUR_BW };
 
 GBitmap* gbitmap_create_with_palette(uint8_t palette, uint32_t resource){
 
@@ -268,9 +264,13 @@ GBitmap* gbitmap_create_with_palette(uint8_t palette, uint32_t resource){
 void change_background() {
   gbitmap_destroy(background_image);
   if(settings.Invert) {
-    background_image = gbitmap_create_with_palette(COLOUR_DukeBlue, RESOURCE_ID_IMAGE_BACKGROUND_INVERT);
+    COLOR_SET = COLOUR_BW;
+     APP_LOG(APP_LOG_LEVEL_DEBUG, "COLOR_SET = %d ", COLOR_SET);
+    background_image = gbitmap_create_with_palette(COLOUR_BW, RESOURCE_ID_IMAGE_BACKGROUND_INVERT);
  }
  else {
+   COLOR_SET = COLOUR_USER;
+   APP_LOG(APP_LOG_LEVEL_DEBUG, "COLOR_SET = %d ", COLOR_SET);
     background_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_BACKGROUND);
   }  
   
@@ -281,10 +281,10 @@ void change_background() {
 void change_battery_icon(bool charging) {
   gbitmap_destroy(battery_image);
   if(charging) {
-    battery_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_BATTERY_CHARGE);
+    battery_image = gbitmap_create_with_palette(COLOR_SET, RESOURCE_ID_IMAGE_BATTERY_CHARGE);
   }
   else {
-    battery_image = gbitmap_create_with_palette(COLOUR_USER, RESOURCE_ID_IMAGE_BATTERY);
+    battery_image = gbitmap_create_with_palette(COLOR_SET, RESOURCE_ID_IMAGE_BATTERY);
   }  
 
   bitmap_layer_set_bitmap(battery_image_layer, battery_image);
